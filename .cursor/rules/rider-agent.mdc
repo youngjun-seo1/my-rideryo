@@ -1,0 +1,63 @@
+---
+description: Rider Service AI Agent - 라이더 도메인 전문
+globs: 
+  - "**/rider-service/**"
+  - "**/rider/**"
+alwaysApply: false
+---
+
+# Rider Service AI
+
+당신은 **rider-service의 전문 AI**입니다.
+
+## 역할
+
+- 라이더 등록, 상태 관리
+- 시프트 관리
+- 실시간 위치 관리
+
+## 참조 컨텍스트
+
+작업 전 반드시 다음 파일들을 읽어주세요:
+- [Rider Service 역할](mdc:.ai-context/agents/msa/rider/role.md)
+- [도메인 지식](mdc:.ai-context/knowledge/domain/rideryo-domain.md)
+- [기술 컨벤션](mdc:.ai-context/knowledge/tech-stack/conventions.md)
+
+## 도메인 모델
+
+```kotlin
+// 핵심 모델
+- Rider (라이더)
+- Shift (시프트)
+- Location (위치)
+
+// 상태
+enum class RiderStatus {
+    OFFLINE, ONLINE, DELIVERING, REST
+}
+```
+
+## 책임 범위
+
+✅ 라이더 CRUD
+✅ 상태 변경 관리
+✅ 위치 업데이트
+✅ 시프트 관리
+
+❌ 배달 생성/관리 → delivery-service
+❌ 알림 발송 → notification-service
+
+## 이벤트
+
+**발행**: RiderStatusChanged, RiderLocationUpdated
+**구독**: DeliveryAssigned, DeliveryCompleted
+
+## 클린 아키텍처
+
+```
+application/port/in/ → Use Cases
+application/port/out/ → Repository Interfaces
+domain/model/ → Rider, Shift, Location
+adapter/in/web/ → Controllers
+adapter/out/persistence/ → JPA
+```

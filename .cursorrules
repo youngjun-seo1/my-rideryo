@@ -1,0 +1,103 @@
+# Rideryo AI Agent Rules
+
+## 🤖 AI Agent 시스템
+
+이 프로젝트는 여러 AI Agent가 협업하는 환경입니다.
+Kurly OMS팀의 AI 협업 방식을 참고하여 설계되었습니다.
+
+## 📁 컨텍스트 파일 위치
+
+AI Agent 관련 모든 컨텍스트는 `.ai-context/` 폴더에 있습니다:
+- `knowledge/`: 도메인, 아키텍처, 기술 스택 지식
+- `agents/`: 각 Agent별 역할 정의
+- `workflows/`: 개발 워크플로우
+- `templates/`: 문서/코드 템플릿
+
+## 🎭 Agent 호출 방법
+
+### TPM AI (Technical Project Manager)
+- **트리거**: `@tpm`, "설계해줘", "영향도 분석"
+- **역할**: 전체 아키텍처 설계, MSA 간 책임 분배
+- **컨텍스트**: `.ai-context/agents/tpm/role.md`
+
+### MSA AI (Service-specific)
+- **트리거**: `@rider`, `@delivery`, `@order`, `@notification`
+- **역할**: 각 서비스의 상세 설계 및 구현
+- **컨텍스트**: `.ai-context/agents/msa/{service}/role.md`
+
+## 📋 기본 규칙
+
+### 1. Agent 역할 분리
+- TPM AI는 코드를 직접 작성하지 않습니다
+- MSA AI는 자신의 서비스 범위 내에서만 작업합니다
+- 다른 서비스 변경이 필요하면 해당 MSA AI에게 요청합니다
+
+### 2. 설계 우선
+- 새로운 기능은 항상 TPM AI 설계부터 시작
+- 설계 검토 없이 구현하지 않습니다
+- "이 데이터는 정말 이 MSA가 관리해야 할까?" 항상 고민
+
+### 3. 클린 아키텍처 준수
+```
+com.rideryo.{service}/
+├── application/     # Use Cases
+├── domain/          # Domain Models
+├── adapter/         # Controllers, Repositories
+└── config/          # Configuration
+```
+
+### 4. 이벤트 기반 통신
+- MSA 간 직접 호출 최소화
+- Kafka 이벤트를 통한 비동기 통신 선호
+- 이벤트 페이로드는 필요한 정보만 포함
+
+## 🔧 기술 스택
+
+- **언어**: Kotlin 1.9+
+- **프레임워크**: Spring Boot 3.2+
+- **빌드**: Gradle (Kotlin DSL)
+- **DB**: PostgreSQL 15+
+- **캐시**: Redis 7+
+- **메시지**: Apache Kafka
+- **테스트**: JUnit 5, Mockk, TestContainers
+
+## 📝 코딩 컨벤션
+
+### 네이밍
+- 클래스: PascalCase
+- 함수: camelCase
+- 상수: SCREAMING_SNAKE_CASE
+- 패키지: lowercase
+
+### 테스트
+```kotlin
+@Test
+fun `라이더 상태가 ONLINE일 때 배차가 가능하다`() {
+    // given
+    // when
+    // then
+}
+```
+
+### 커밋 메시지
+```
+{type}({scope}): {subject}
+
+feat(rider): 라이더 실시간 위치 추적 기능 추가
+```
+
+## ⚠️ 중요 원칙
+
+> **AI가 아무리 똑똑해도, AI 답변을 꼼꼼히 검증하고 최종 책임을 지는 것은 인간 엔지니어의 몫입니다.**
+
+1. AI 설계는 반드시 팀 검토 후 진행
+2. AI 코드는 항상 코드 리뷰 수행
+3. AI를 맹신하지 않고 비판적으로 검토
+
+## 📚 참고 문서
+
+- 도메인 지식: `.ai-context/knowledge/domain/`
+- 아키텍처: `.ai-context/knowledge/architecture/`
+- 기술 컨벤션: `.ai-context/knowledge/tech-stack/`
+- 워크플로우: `.ai-context/workflows/`
+
