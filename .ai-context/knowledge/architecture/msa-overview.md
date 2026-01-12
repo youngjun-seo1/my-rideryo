@@ -2,7 +2,7 @@
 
 ## 서비스 구성
 
-```
+```text
                     ┌─────────────────┐
                     │  API Gateway    │
                     │  (gateway-api)  │
@@ -28,11 +28,13 @@
 ## 서비스별 책임
 
 ### 1. gateway-api
+
 - **역할**: API 라우팅, 인증/인가
 - **포트**: 8080
 - **기술**: Spring Cloud Gateway
 
 ### 2. rider-service
+
 - **역할**: 라이더 등록, 상태 관리, 시프트 관리
 - **포트**: 8081
 - **DB**: PostgreSQL (rider_db)
@@ -42,6 +44,7 @@
   - `GET /riders/available` - 가용 라이더 조회
 
 ### 3. delivery-service
+
 - **역할**: 배달 생성, 배차, 배달 상태 관리
 - **포트**: 8082
 - **DB**: PostgreSQL (delivery_db)
@@ -51,6 +54,7 @@
   - `PUT /deliveries/{id}/status` - 상태 변경
 
 ### 4. order-service
+
 - **역할**: 주문 수신, 가맹점/고객 정보 관리
 - **포트**: 8083
 - **DB**: PostgreSQL (order_db)
@@ -59,6 +63,7 @@
   - `GET /orders/{id}` - 주문 조회
 
 ### 5. notification-service
+
 - **역할**: 푸시 알림, SMS, 카카오 알림톡
 - **포트**: 8084
 - **기술**: Firebase FCM, AWS SNS
@@ -69,10 +74,12 @@
 ## 서비스 간 통신
 
 ### 동기 통신 (REST)
+
 - Gateway → 각 서비스
 - delivery-service → rider-service (라이더 조회)
 
 ### 비동기 통신 (Event)
+
 - **Message Broker**: Apache Kafka
 - **토픽 설계**:
   - `rider.status.changed`
@@ -84,7 +91,8 @@
 ## 데이터 흐름
 
 ### 배달 요청 흐름
-```
+
+```text
 1. order-service: 주문 수신 → OrderReceived 이벤트 발행
 2. delivery-service: 이벤트 수신 → 배달 생성
 3. delivery-service: 최적 라이더 조회 (rider-service)
@@ -101,4 +109,3 @@
 - **로깅**: ELK Stack
 - **모니터링**: Prometheus + Grafana
 - **추적**: Jaeger (분산 추적)
-

@@ -3,6 +3,7 @@
 ## 기술 스택
 
 ### Backend
+
 - **언어**: Kotlin 1.9+
 - **프레임워크**: Spring Boot 3.2+
 - **빌드 도구**: Gradle (Kotlin DSL)
@@ -12,6 +13,7 @@
 - **메시지 브로커**: Apache Kafka
 
 ### 인프라
+
 - **컨테이너**: Docker
 - **오케스트레이션**: Kubernetes
 - **CI/CD**: GitHub Actions
@@ -19,7 +21,7 @@
 
 ## 패키지 구조 (클린 아키텍처)
 
-```
+```text
 com.rideryo.{service}/
 ├── application/          # 애플리케이션 계층
 │   ├── port/
@@ -140,7 +142,8 @@ class RiderServiceTest {
 ## Git 컨벤션
 
 ### 브랜치 전략
-```
+
+```text
 main
 ├── develop
 │   ├── feature/{ticket-id}-{description}
@@ -149,7 +152,8 @@ main
 ```
 
 ### 커밋 메시지
-```
+
+```text
 {type}({scope}): {subject}
 
 {body}
@@ -158,6 +162,7 @@ main
 ```
 
 **타입**:
+
 - `feat`: 새로운 기능
 - `fix`: 버그 수정
 - `refactor`: 리팩토링
@@ -166,7 +171,8 @@ main
 - `chore`: 빌드, 설정 변경
 
 **예시**:
-```
+
+```text
 feat(rider): 라이더 실시간 위치 추적 기능 추가
 
 - WebSocket을 통한 실시간 위치 업데이트
@@ -175,4 +181,3 @@ feat(rider): 라이더 실시간 위치 추적 기능 추가
 
 Closes #123
 ```
-
