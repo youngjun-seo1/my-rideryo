@@ -15,6 +15,7 @@
 ## 도메인 모델
 
 ### Delivery (배달)
+
 ```kotlin
 data class Delivery(
     val id: Long,
@@ -41,6 +42,7 @@ enum class DeliveryStatus {
 ```
 
 ### Address (주소)
+
 ```kotlin
 data class Address(
     val address: String,
@@ -51,6 +53,7 @@ data class Address(
 ```
 
 ### Assignment (배차 기록)
+
 ```kotlin
 data class Assignment(
     val id: Long,
@@ -71,7 +74,7 @@ enum class AssignmentStatus {
 ## 주요 API
 
 | Method | Endpoint | 설명 |
-|--------|----------|------|
+| ------ | -------- | ---- |
 | POST | /deliveries | 배달 생성 |
 | GET | /deliveries/{id} | 배달 조회 |
 | POST | /deliveries/{id}/assign | 배차 요청 |
@@ -82,7 +85,7 @@ enum class AssignmentStatus {
 ## 발행 이벤트
 
 | 이벤트 | 발행 시점 | 페이로드 |
-|--------|----------|----------|
+| ------ | --------- | -------- |
 | DeliveryRequested | 배달 생성 시 | deliveryId, orderId, addresses |
 | DeliveryAssigned | 배차 완료 시 | deliveryId, riderId |
 | DeliveryPickedUp | 픽업 완료 시 | deliveryId, riderId |
@@ -92,13 +95,13 @@ enum class AssignmentStatus {
 ## 구독 이벤트
 
 | 이벤트 | 발행 서비스 | 처리 |
-|--------|------------|------|
+| ------ | ----------- | ---- |
 | OrderReceived | order-service | 배달 자동 생성 |
 | RiderStatusChanged | rider-service | 배차 가능 라이더 갱신 |
 
 ## 패키지 구조
 
-```
+```text
 com.rideryo.delivery/
 ├── application/
 │   ├── port/
@@ -151,7 +154,7 @@ com.rideryo.delivery/
    - ASSIGNED → PICKED_UP: 픽업 완료
    - PICKED_UP → DELIVERING: 배달 출발
    - DELIVERING → COMPLETED: 배달 완료
-   - * → CANCELLED: 취소 (조건부)
+   - \* → CANCELLED: 취소 (조건부)
 
 3. **배달 시간 제한**
    - 픽업 후 30분 내 배달 권장
@@ -163,6 +166,7 @@ com.rideryo.delivery/
 ## 외부 서비스 연동
 
 ### rider-service 연동
+
 ```kotlin
 interface RiderServiceClient {
     fun findAvailableRiders(location: Location, radius: Int): List<RiderSummary>
@@ -180,6 +184,7 @@ interface RiderServiceClient {
 ## 협업 패턴
 
 ### rider-service와 협업
+
 ```markdown
 - 배차 시 rider-service에서 가용 라이더 조회
 - 배차 완료 시 DeliveryAssigned 이벤트 발행
@@ -187,8 +192,8 @@ interface RiderServiceClient {
 ```
 
 ### notification-service와 협업
+
 ```markdown
 - 배차/픽업/완료 이벤트 발행
 - notification-service가 구독하여 알림 발송
 ```
-
