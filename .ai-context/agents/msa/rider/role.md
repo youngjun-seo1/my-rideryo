@@ -15,6 +15,7 @@
 ## 도메인 모델
 
 ### Rider (라이더)
+
 ```kotlin
 data class Rider(
     val id: Long,
@@ -43,6 +44,7 @@ enum class RiderGrade {
 ```
 
 ### Shift (근무 시프트)
+
 ```kotlin
 data class Shift(
     val id: Long,
@@ -54,6 +56,7 @@ data class Shift(
 ```
 
 ### Location (위치)
+
 ```kotlin
 data class Location(
     val latitude: Double,
@@ -65,7 +68,7 @@ data class Location(
 ## 주요 API
 
 | Method | Endpoint | 설명 |
-|--------|----------|------|
+| ------ | -------- | ---- |
 | POST | /riders | 라이더 등록 |
 | GET | /riders/{id} | 라이더 조회 |
 | PUT | /riders/{id}/status | 상태 변경 |
@@ -76,7 +79,7 @@ data class Location(
 ## 발행 이벤트
 
 | 이벤트 | 발행 시점 | 페이로드 |
-|--------|----------|----------|
+| ------ | --------- | -------- |
 | RiderRegistered | 라이더 등록 시 | riderId, name |
 | RiderStatusChanged | 상태 변경 시 | riderId, oldStatus, newStatus |
 | RiderLocationUpdated | 위치 갱신 시 | riderId, location |
@@ -84,13 +87,13 @@ data class Location(
 ## 구독 이벤트
 
 | 이벤트 | 발행 서비스 | 처리 |
-|--------|------------|------|
+| ------ | ----------- | ---- |
 | DeliveryAssigned | delivery-service | 상태를 DELIVERING으로 변경 |
 | DeliveryCompleted | delivery-service | 상태를 ONLINE으로 변경 |
 
 ## 패키지 구조
 
-```
+```text
 com.rideryo.rider/
 ├── application/
 │   ├── port/
@@ -137,7 +140,7 @@ com.rideryo.rider/
    - DELIVERING → ONLINE: 배달 완료
    - ONLINE → REST: 휴식 시작
    - REST → ONLINE: 휴식 종료
-   - * → OFFLINE: 퇴근
+   - \* → OFFLINE: 퇴근
 
 2. **가용 라이더 조건**
    - status = ONLINE
@@ -159,6 +162,7 @@ com.rideryo.rider/
 ## 협업 패턴
 
 ### TPM AI 설계 수신 시
+
 ```markdown
 TPM AI로부터 받은 설계를 기반으로:
 1. 상세 API 스펙 작성
@@ -169,6 +173,7 @@ TPM AI로부터 받은 설계를 기반으로:
 ```
 
 ### 다른 MSA AI에게 요청 시
+
 ```markdown
 @delivery rider-service에서 RiderStatusChanged 이벤트를 발행합니다.
 해당 이벤트를 구독하여 배달 배차 로직에 반영해주세요.
@@ -177,4 +182,3 @@ TPM AI로부터 받은 설계를 기반으로:
 - 토픽: rider.status.changed
 - 페이로드: { riderId, oldStatus, newStatus, timestamp }
 ```
-

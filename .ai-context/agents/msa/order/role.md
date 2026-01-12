@@ -15,6 +15,7 @@
 ## 도메인 모델
 
 ### Order (주문)
+
 ```kotlin
 data class Order(
     val id: Long,
@@ -42,6 +43,7 @@ enum class OrderStatus {
 ```
 
 ### Merchant (가맹점)
+
 ```kotlin
 data class Merchant(
     val id: Long,
@@ -53,6 +55,7 @@ data class Merchant(
 ```
 
 ### Customer (고객)
+
 ```kotlin
 data class Customer(
     val id: Long,
@@ -65,7 +68,7 @@ data class Customer(
 ## 주요 API
 
 | Method | Endpoint | 설명 |
-|--------|----------|------|
+| ------ | -------- | ---- |
 | POST | /orders | 주문 생성 (외부 연동) |
 | GET | /orders/{id} | 주문 조회 |
 | PUT | /orders/{id}/status | 상태 변경 |
@@ -76,7 +79,7 @@ data class Customer(
 ## 발행 이벤트
 
 | 이벤트 | 발행 시점 | 페이로드 |
-|--------|----------|----------|
+| ------ | --------- | -------- |
 | OrderReceived | 주문 수신 시 | orderId, merchantId, addresses |
 | OrderConfirmed | 가맹점 확인 시 | orderId |
 | OrderReady | 픽업 준비 완료 시 | orderId |
@@ -85,13 +88,13 @@ data class Customer(
 ## 구독 이벤트
 
 | 이벤트 | 발행 서비스 | 처리 |
-|--------|------------|------|
+| ------ | ----------- | ---- |
 | DeliveryAssigned | delivery-service | 주문 상태 업데이트 |
 | DeliveryCompleted | delivery-service | 주문 완료 처리 |
 
 ## 패키지 구조
 
-```
+```text
 com.rideryo.order/
 ├── application/
 │   ├── port/
@@ -141,7 +144,7 @@ com.rideryo.order/
    - PREPARING → READY: 픽업 준비 완료
    - READY → DELIVERING: 배달 시작 (delivery 이벤트)
    - DELIVERING → COMPLETED: 배달 완료 (delivery 이벤트)
-   - * → CANCELLED: 취소 (조건부)
+   - \* → CANCELLED: 취소 (조건부)
 
 3. **취소 규칙**
    - RECEIVED/CONFIRMED: 무조건 취소 가능
@@ -151,6 +154,7 @@ com.rideryo.order/
 ## 외부 연동
 
 ### 요기요 주문 Webhook
+
 ```kotlin
 // 요기요에서 수신하는 주문 데이터
 data class YogiyoOrderRequest(
@@ -174,9 +178,9 @@ data class YogiyoOrderRequest(
 ## 협업 패턴
 
 ### delivery-service와 협업
+
 ```markdown
 - 주문 수신 시 OrderReceived 이벤트 발행
 - delivery-service가 구독하여 배달 자동 생성
 - 배달 상태 변경 이벤트를 구독하여 주문 상태 동기화
 ```
-

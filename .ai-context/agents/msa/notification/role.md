@@ -15,7 +15,7 @@
 ## 알림 채널
 
 | 채널 | 기술 | 용도 |
-|------|------|------|
+| ---- | ---- | ---- |
 | Push | Firebase FCM | 앱 푸시 알림 |
 | SMS | AWS SNS | 긴급 알림, 인증 |
 | Kakao | 카카오 알림톡 | 배달 상태 알림 |
@@ -24,6 +24,7 @@
 ## 도메인 모델
 
 ### Notification (알림)
+
 ```kotlin
 data class Notification(
     val id: Long,
@@ -59,6 +60,7 @@ enum class NotificationStatus {
 ```
 
 ### NotificationTemplate (알림 템플릿)
+
 ```kotlin
 data class NotificationTemplate(
     val id: String,
@@ -73,7 +75,7 @@ data class NotificationTemplate(
 ## 주요 API
 
 | Method | Endpoint | 설명 |
-|--------|----------|------|
+| ------ | -------- | ---- |
 | POST | /notifications/push | 푸시 알림 발송 |
 | POST | /notifications/sms | SMS 발송 |
 | POST | /notifications/kakao | 카카오 알림톡 발송 |
@@ -83,7 +85,7 @@ data class NotificationTemplate(
 ## 구독 이벤트 (핵심 기능)
 
 | 이벤트 | 발행 서비스 | 알림 내용 |
-|--------|------------|----------|
+| ------ | ----------- | --------- |
 | DeliveryAssigned | delivery-service | 라이더에게 배차 알림 |
 | DeliveryPickedUp | delivery-service | 고객에게 픽업 알림 |
 | DeliveryCompleted | delivery-service | 고객에게 배달 완료 알림 |
@@ -93,7 +95,8 @@ data class NotificationTemplate(
 ## 알림 템플릿
 
 ### 라이더 배차 알림
-```
+
+```text
 템플릿 ID: RIDER_ASSIGNED
 채널: PUSH
 제목: 새로운 배달이 배정되었습니다
@@ -101,7 +104,8 @@ data class NotificationTemplate(
 ```
 
 ### 고객 픽업 완료 알림
-```
+
+```text
 템플릿 ID: CUSTOMER_PICKED_UP
 채널: KAKAO
 내용: [{merchantName}] 주문하신 음식이 픽업되었습니다. 
@@ -110,7 +114,8 @@ data class NotificationTemplate(
 ```
 
 ### 고객 배달 완료 알림
-```
+
+```text
 템플릿 ID: CUSTOMER_DELIVERED
 채널: KAKAO
 내용: [{merchantName}] 배달이 완료되었습니다.
@@ -119,7 +124,7 @@ data class NotificationTemplate(
 
 ## 패키지 구조
 
-```
+```text
 com.rideryo.notification/
 ├── application/
 │   ├── port/
@@ -179,6 +184,7 @@ com.rideryo.notification/
 ## 외부 서비스 연동
 
 ### Firebase FCM
+
 ```kotlin
 interface FcmClient {
     fun sendPush(token: String, title: String, body: String, data: Map<String, String>): Boolean
@@ -186,6 +192,7 @@ interface FcmClient {
 ```
 
 ### AWS SNS
+
 ```kotlin
 interface SnsClient {
     fun sendSms(phoneNumber: String, message: String): Boolean
@@ -193,6 +200,7 @@ interface SnsClient {
 ```
 
 ### 카카오 알림톡
+
 ```kotlin
 interface KakaoClient {
     fun sendAlimtalk(phoneNumber: String, templateCode: String, variables: Map<String, String>): Boolean
@@ -209,10 +217,10 @@ interface KakaoClient {
 ## 협업 패턴
 
 ### 이벤트 기반 알림 발송
+
 ```markdown
 1. 각 서비스에서 도메인 이벤트 발행
 2. notification-service가 이벤트 구독
 3. 이벤트 타입에 따라 적절한 템플릿 선택
 4. 알림 발송 및 이력 저장
 ```
-
